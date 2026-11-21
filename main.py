@@ -1,54 +1,92 @@
-"""Entry for make.fun news-image-20261120.
+#!/usr/bin/env python3
+"""Copy the entry poster to the output directory.
 
-Copies the pre-rendered poster (image.png, shipped in this repository)
-to /output/entry.png. Standard library only, no network, deterministic:
-every run writes the same bytes as image.png.
+Reads image.png from the repository root, checks it is a genuine PNG
+of 1024x1024 pixels, copies it to /output/entry.png (or to the
+directory named by MAKEFUN_OUTPUT_DIR), then verifies the copy by
+comparing its SHA-256 digest and size with the source and prints both.
+
+Standard library only; no network access.
 """
 
 import hashlib
 import os
 import shutil
 import struct
+import sys
 
-PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+SOURCE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "image.png")
+OUTPUT_DIR = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+OUTPUT = os.path.join(OUTPUT_DIR, "entry.png")
+
 EXPECTED_WIDTH = 1024
 EXPECTED_HEIGHT = 1024
 
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
 
 def sha256_of(path):
-    with open(path, "rb") as f:
-        return hashlib.sha256(f.read()).hexdigest()
+    """Return the hex SHA-256 digest of the file at path."""
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def png_dimensions(path):
+    """Return (width, height) of a PNG file, or raise ValueError.
+
+    Parses the 8-byte signature and the IHDR chunk header directly,
+    so a file that merely ends in .png cannot pass.
+    """
+    with open(path, "rb") as handle:
+        header = handle.read(33)
+    if len(header) < 33 or header[:8] != PNG_SIGNATURE:
+        raise ValueError("not a PNG file: bad signature")
+    length, chunk_type = struct.unpack(">I4s", header[8:16])
+    if chunk_type != b"IHDR" or length != 13:
+        raise ValueError("not a PNG file: first chunk is not IHDR")
+    width, height = struct.unpack(">II", header[16:24])
+    return width, height
 
 
 def main():
-    here = os.path.dirname(os.path.abspath(__file__))
-    src = os.path.join(here, "image.png")
-    if not os.path.isfile(src):
-        raise FileNotFoundError("image.png not found next to main.py")
-    with open(src, "rb") as f:
-        header = f.read(33)
-    if header[: len(PNG_MAGIC)] != PNG_MAGIC:
-        raise ValueError("image.png is not a PNG file")
-    # IHDR chunk: width and height are the first 8 bytes after the
-    # 8-byte magic + 4-byte length + 4-byte chunk type.
-    width, height = struct.unpack(">II", header[16:24])
+    """Validate the source poster, copy it, and verify the copy."""
+    if not os.path.isfile(SOURCE):
+        print(f"error: source image not found: {SOURCE}", file=sys.stderr)
+        return 1
+
+    try:
+        width, height = png_dimensions(SOURCE)
+    except (OSError, ValueError) as exc:
+        print(f"error: invalid source image: {exc}", file=sys.stderr)
+        return 1
     if (width, height) != (EXPECTED_WIDTH, EXPECTED_HEIGHT):
-        raise ValueError(
-            "image.png is %dx%d, expected %dx%d"
-            % (width, height, EXPECTED_WIDTH, EXPECTED_HEIGHT)
+        print(
+            f"error: expected {EXPECTED_WIDTH}x{EXPECTED_HEIGHT}, "
+            f"got {width}x{height}",
+            file=sys.stderr,
         )
-    out_dir = "/output"
-    os.makedirs(out_dir, exist_ok=True)
-    dst = os.path.join(out_dir, "entry.png")
-    shutil.copyfile(src, dst)
-    src_hash = sha256_of(src)
-    dst_hash = sha256_of(dst)
-    assert src_hash == dst_hash, "output differs from image.png"
-    assert os.path.getsize(src) == os.path.getsize(dst), "size mismatch"
-    print("source sha256: " + src_hash)
-    print("sha256: " + dst_hash)
-    print("Wrote " + dst + " (" + str(os.path.getsize(dst)) + " bytes)")
+        return 1
+
+    source_hash = sha256_of(SOURCE)
+    source_size = os.path.getsize(SOURCE)
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    shutil.copyfile(SOURCE, OUTPUT)
+
+    output_hash = sha256_of(OUTPUT)
+    output_size = os.path.getsize(OUTPUT)
+    if output_hash != source_hash or output_size != source_size:
+        print("error: output does not match source", file=sys.stderr)
+        return 1
+
+    print(f"wrote {OUTPUT}")
+    print(f"sha256: {output_hash}")
+    print(f"size: {output_size} bytes ({width}x{height})")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
