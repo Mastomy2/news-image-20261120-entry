@@ -1,0 +1,17 @@
+Create a clean newspaper-style front-page poster, square 1024x1024 pixels, full color, crisp flat vector style with sharp legible text. Navy blue masthead band across the top with large white serif text: "THE WORLD IN ONE DAY". Directly below it, a thin red rule and a centered date line in bold dark text: "Friday 20 November 2026 — Twelve stories from five continents". Below that, a tidy grid of 12 numbered story boxes in 3 columns and 4 rows, each box with a thin light-grey border, white background, a small colored region tag in bold capital letters, a bold dark headline, one short summary sentence, and a small grey source line. Use only the exact text below, spelled exactly as written, no extra words, no invented text, no gibberish. Keep every headline on at most two lines and every summary on at most two lines so all text stays readable. Full color throughout, no color reduction, no palette limit. All text must be spelled correctly and fully legible.
+
+Stories (all real events of Friday 20 November 2026, verified against live reporting):
+1. EUROPE — "Missiles land in Poland" — Russia's biggest November barrage hits Kyiv; two missiles and a drone crash in Poland. NATO calls it a grave violation. — AP / ISW
+2. EUROPE — "UK and EU strike landmark deal" — Second EU-UK summit ends with food-trade and youth-mobility pacts; von der Leyen calls it a turning point. — AP / Le Monde
+3. EUROPE — "Ukraine reveals Bear Trap victory" — Kyiv says a secret counteroffensive retook 14 settlements and 200 sq km in Kharkiv. — BBC / 112.ua
+4. ASIA — "Cyclone Akvan hits India's east coast" — Landfall near Gopalpur, Odisha; 372,000 evacuated as rescue teams move in. — IMD / The Hindu
+5. ASIA-PACIFIC — "Xi hails Australia turnaround" — Xi tells Albanese ties have seen a comprehensive turnaround at APEC in Shenzhen. — Reuters
+6. MIDDLE EAST — "Houthi missile hits Riyadh tower" — Blast blows out windows across 7-8 floors of the PIF Tower; no injuries reported. — Reuters / WSJ
+7. MIDDLE EAST — "Tanker struck near Hormuz" — A tanker is hit by a projectile off Oman as Trump claims total control of the strait. — UKMTO / Reuters
+8. MIDDLE EAST — "COP31 draft drops fossil fuels" — Final-day talks in Antalya stall as the draft text omits oil, gas and coal. — Reuters / UN News
+9. NORTH AMERICA — "Senate backs Trump on Iran war" — Senators reject curbs on the president's Iran war powers, 51-48. — Reuters
+10. NORTH AMERICA — "Wall Street sinks into correction" — S&P 500 falls 3.7% to 6,910; Nasdaq drops 5.3% in an AI-led sell-off. — AP
+11. NORTH AMERICA — "Trump threatens data-center tax" — US firms building data centers abroad face a tremendous tax, Trump says. — Reuters / WSJ
+12. CULTURE — "GTA VI banks $1.84bn" — Record launch: about 19m copies sold by day one, Sensor Tower estimates. — Sensor Tower / Reuters
+
+Footer line at the bottom, small centered grey text: "Sources: AP, Reuters, WSJ, ISW, BBC, IMD, The Hindu, UKMTO, UN News — 20 November 2026".
